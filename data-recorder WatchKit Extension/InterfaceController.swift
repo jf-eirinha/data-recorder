@@ -19,6 +19,7 @@ class InterfaceController: WKInterfaceController {
         // Configure interface objects here.
     }
     
+    
     @IBOutlet weak var accelerometerXLabel: WKInterfaceLabel!
     @IBOutlet weak var accelerometerYLabel: WKInterfaceLabel!
     @IBOutlet weak var accelerometerZLabel: WKInterfaceLabel!
@@ -46,6 +47,9 @@ class InterfaceController: WKInterfaceController {
     }
     
     func startDeviceMotion() {
+        
+        var timeSeriesData = [[Double]]()
+        
         if motion.isDeviceMotionAvailable {
             self.motion.deviceMotionUpdateInterval = 1.0 / 60.0
             self.motion.showsDeviceMovementDisplay = true
@@ -56,6 +60,11 @@ class InterfaceController: WKInterfaceController {
                 self.setLabel(label: self.accelerometerYLabel, datum: gravityData.y)
                 self.setLabel(label: self.accelerometerZLabel, datum: gravityData.z)
                 
+                timeSeriesData[1].append(gravityData.x)
+                timeSeriesData[2].append(gravityData.y)
+                timeSeriesData[3].append(gravityData.z)
+                
+                print(timeSeriesData)
             }
             
         }
