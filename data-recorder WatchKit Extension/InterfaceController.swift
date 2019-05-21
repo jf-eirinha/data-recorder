@@ -5,14 +5,13 @@
 //  Created by XCodeClub on 2019-05-01.
 //  Copyright © 2019 dataset-devteam. All rights reserved.
 //
-
 import WatchKit
 import Foundation
 import CoreMotion
 
 
 class InterfaceController: WKInterfaceController {
-
+    
     override func awake(withContext context: Any?) {
         super.awake(withContext: context)
         
@@ -25,6 +24,7 @@ class InterfaceController: WKInterfaceController {
     @IBOutlet weak var accelerometerZLabel: WKInterfaceLabel!
     
     let motion = CMMotionManager()
+    var timeSeriesData = [[Double]]()
     
     func setLabel(label: WKInterfaceLabel, datum: Double) -> Void {
         var datumToWriteToLabel: Double;
@@ -48,7 +48,6 @@ class InterfaceController: WKInterfaceController {
     
     func startDeviceMotion() {
         
-        var timeSeriesData = [[Double]]()
         
         if motion.isDeviceMotionAvailable {
             self.motion.deviceMotionUpdateInterval = 1.0 / 60.0
@@ -60,11 +59,10 @@ class InterfaceController: WKInterfaceController {
                 self.setLabel(label: self.accelerometerYLabel, datum: gravityData.y)
                 self.setLabel(label: self.accelerometerZLabel, datum: gravityData.z)
                 
-                timeSeriesData[1].append(gravityData.x)
-                timeSeriesData[2].append(gravityData.y)
-                timeSeriesData[3].append(gravityData.z)
+                self.timeSeriesData.append([0,gravityData.x])
+                self.timeSeriesData.append([1,gravityData.y])
+                self.timeSeriesData.append([2,gravityData.z])
                 
-                print(timeSeriesData)
             }
             
         }
@@ -81,7 +79,9 @@ class InterfaceController: WKInterfaceController {
         // This method is called when watch view controller is no longer visible
         super.didDeactivate()
         
+        print(timeSeriesData)
+        
         motion.stopDeviceMotionUpdates()
     }
-
+    
 }
